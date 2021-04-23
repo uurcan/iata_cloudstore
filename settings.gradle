@@ -1,0 +1,2 @@
+rootProject.name='iata_cloud'
+include ':app'

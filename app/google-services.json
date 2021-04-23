@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "893240308794",
+    "project_id": "iata-database",
+    "storage_bucket": "iata-database.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:893240308794:android:cd52802dca0c0dc1a07103",
+        "android_client_info": {
+          "package_name": "com.java.iata_firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "893240308794-k024mtc2l4gi05hs5vecbfffkndc5kbs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.java.iata_firebase",
+            "certificate_hash": "0e178d3ab2f4df9e95e6ddd99f76492f081f027f"
+          }
+        },
+        {
+          "client_id": "893240308794-dlnvqc2f2ahgrinuq6g7rdq9dohr0ol5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCY702BKUOZkcL-TrTbVk-TJzTUwPV-5ns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "893240308794-dlnvqc2f2ahgrinuq6g7rdq9dohr0ol5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
