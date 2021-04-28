@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private List<IATAData> iataDataList = new ArrayList<>();
@@ -58,13 +59,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void convertData() {
         EditText editText = findViewById(R.id.edtFind);
         if (!TextUtils.isEmpty(editText.getText())){
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("all");
-            Query query = reference.equalTo(editText.getText().toString());
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("iata-all");
+            Query query = reference.child(editText.getText().toString());
             query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.child("name").getValue() != null) {
-                        result = snapshot.child("name").getKey();
+                        result = snapshot.child("name").getValue().toString();
+                        Toast.makeText(MainActivity.this,"Result is : " + result,Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -73,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Log.d("TEST","Cancelled");
                 }
             });
-            Toast.makeText(this,"Result is : " + result ,Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Empty, please define a query to see results.", Toast.LENGTH_LONG).show();
         }
@@ -106,31 +107,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.wtf("TEST","Error reading data file on line " + line,e);
             e.printStackTrace();
         }
-        Toast.makeText(this,"Reading completed, " + String.valueOf(iataDataList.size()) + " records has been inserted.",Toast.LENGTH_LONG ).show();
+        Toast.makeText(this,"Reading completed, " + iataDataList.size() + " records has been inserted.",Toast.LENGTH_LONG ).show();
     }
 
     private void pushData(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Hint");
         builder.setMessage("This operation will take time, please check your firebase console to see results");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference databaseReference = database.getReference("all").child("test");
-                Map<String, IATAData> hashMap = new HashMap<>();
-                for (IATAData iataData : iataDataList){
-                    hashMap.put(iataData.getIDENT(),iataData);
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = database.getReference("iata-all");
+            Map<String, IATAData> hashMap = new HashMap<>();
+            for (IATAData iataData : iataDataList){
+                String value = iataData.getLOCAL_CODE().replaceAll("[^a-zA-Z0-9]","EMPTY");
+                if (!value.equals("")) {
+                    hashMap.put(value, iataData);
                 }
-                databaseReference.setValue(hashMap);
             }
+            databaseReference.setValue(hashMap);
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         builder.show();
     }
 
